@@ -48,7 +48,7 @@ const uploads = multer({ storage }).single('file');
 router.post("/fileUpload", async (req, res) => {
     console.log(req)
     uploads(req, res, async (err) => {
-        var saveUser
+        // var saveUser
         if (err) {
             res.status(500).send(err)
         }
@@ -67,70 +67,34 @@ router.post("/fileUpload", async (req, res) => {
             userdata.zipCode=data.zip
             userdata.userType=data.userType
             userdata.gender=data.gender
-            try {
-                saveUser = await UserModel.userSave(userdata)
-               console.log(saveUser.data,"saveUsersaveUser")
-                if (saveUser) {
-                    // res.status(200).json(outputData.data)
-                    var companyData={}
-                    companyData.companyName=data.company_name
-                    let saveCompany = await UserModel.companySave(companyData)
-                    var categoryData={}
-                    categoryData.categoryName=data.category_name
-                    var savecategory = await UserModel.categorySave(categoryData)
-                } 
-                // else if(saveUser.data==="Email Already Exist") {
-                //     res.status(200).send(saveUser.data)
-                // }
-            } catch (error) {
-                console.log("inside err", error)
-                res.status(500).send(error)
-            }
-            // var saveUser = await UserModel.userSave(userdata)
-            // console.log(userdata,"userdata")
+          
+            console.log(userdata,"userdata")
             // let userObj = new userData(userdata)
             // var saveUser = await userObj.save()
-            // console.log(saveUser,"saveUser")
-            //  var companyData={}
-            //  companyData.companyName=data.company_name
+           var saveUser = await UserModel.userSave(userdata)
+            console.log(saveUser,"saveUser+++++++++++++++++==")
+             var companyData={}
+             companyData.companyName=data.company_name
             //  let companyObj = new policyCarrierData(companyData)
             //  var saveCompany = await companyObj.save()
-            // let saveCompany = await UserModel.companySave(companyData)
-            // if(saveCompany.data){
-            //     return res.status(500).json(saveCompany.data)
-            // }
-            //  var categoryData={}
-            //  categoryData.categoryName=data.category_name
+            var saveCompany = await UserModel.companySave(companyData)
+             var categoryData={}
+             categoryData.categoryName=data.category_name
             //  let categoryObj = new policyCategoryData(categoryData)
             //  var savecategory = await categoryObj.save()
-            //  var savecategory = await UserModel.categorySave(categoryData)
-            //  var policy={}
-            //   policy.policyNumber=data.firstname
-            //   policy.startDate=data.policy_start_date
-            //   policy.EndDate=data.policy_start_date
-            //   policy.company=saveCompany._id
-            //   policy.category=savecategory._id
-            //   policy.user=saveUser._id
+             var savecategory = await UserModel.categorySave(categoryData)
+             var policy={}
+              policy.policyNumber=data.firstname
+              policy.startDate=data.policy_start_date
+              policy.EndDate=data.policy_start_date
+              policy.company=saveCompany._id
+              policy.category=savecategory._id
+              policy.user=saveUser._id
             //   let policyObj = new policyInfoData(policy)
             //   savepolicy = await policyObj.save()
+            var savepolicy = await UserModel.policySave(policy)
         })
-        console.log(saveUser,"saveUsersaveUser")
-         return res.status(200).json(saveUser)
-        
-       
-//   return res.json({
-//     json: XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]])
-//   });
-        // req.file.userId=req.userData.id;
-        // req.file.type="product";
-        // req.file.url=req.file.path;
-            // let uploadFile = await models.bulkUpload.create(req.file);
-        // if (!uploadFile) {
-        //     res.status(400).json({ message: 'Error while uploading file!' })
-        // } else {
-        //     res.status(200).json({ uploadFile });
-        // }
-        
+        return res.status(200).json("Done")
     })
     
 })

@@ -21,24 +21,52 @@ exports.userSave = async function (userdata) {
       if (ifAlreadyUser && ifAlreadyUser._id && ifAlreadyUser.email) {
         return {
             data: "Email Already Exist",
+            value: false
         }
+    }else{
+        let userObj = new userData(userdata)
+        var saveUser = await userObj.save()
+        
+             if (saveUser && !saveUser._id) {
+                 return {
+                     data: "Something Went Wrong While Saving UserAccount"
+                 }
+             }
+             return saveUser
     }
-  let userObj = new userData(userdata)
-  var saveUser = await userObj.save()
-  
-       if (saveUser && !saveUser._id) {
-           return {
-               data: "Something Went Wrong While Saving UserAccount"
-           }
-       }
-       return saveUser
+
+    
+},
+exports.policySave = async function (policy) {
+    const  ifAlreadypolicyNumber=await policyInfoData.findOne({
+        policyNumber:policy.policyNumber
+      })
+
+      if (ifAlreadypolicyNumber && ifAlreadypolicyNumber._id && ifAlreadypolicyNumber.email) {
+        return {
+            data: "policy Already Exist",
+            value: false
+        }
+    }else{
+        let policyObj = new policyInfoData(policy)
+        var savepolicy = await policyObj.save()
+        
+             if (savepolicy && !savepolicy._id) {
+                 return {
+                     data: "Something Went Wrong While Saving Policy"
+                 }
+             }
+             return savepolicy
+    }
+
+    
 },
 exports.companySave = async function (companyData) {
-    const  ifAlreadyUser=await policyCarrierData.findOne({
+    const  ifAlreadycompanyName=await policyCarrierData.findOne({
         companyName:companyData.companyName
       })
 
-      if (ifAlreadyUser && ifAlreadyUser._id && ifAlreadyUser.companyName) {
+      if (ifAlreadycompanyName && ifAlreadycompanyName._id && ifAlreadycompanyName.companyName) {
         return {
             data: "companyName Already Exist",
         }
@@ -54,11 +82,11 @@ exports.companySave = async function (companyData) {
        return savecompany
 },
 exports.categorySave = async function (categoryData) {
-    const  ifAlreadyUser=await policyCategoryData.findOne({
+    const  ifAlreadycategoryName=await policyCategoryData.findOne({
         categoryName:categoryData.categoryName
       })
 
-      if (ifAlreadyUser && ifAlreadyUser._id && ifAlreadyUser.categoryName) {
+      if (ifAlreadycategoryName && ifAlreadycategoryName._id && ifAlreadycategoryName.categoryName) {
         return {
             data: "categoryName Already Exist",
         }
