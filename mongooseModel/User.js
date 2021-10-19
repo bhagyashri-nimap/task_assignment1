@@ -1,11 +1,7 @@
 const mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    ObjectId = mongoose.ObjectId;
+    Schema = mongoose.Schema;
 var userSchema = Schema({
     firstName: {
-        type: String
-    },
-    lastName: {
         type: String
     },
     mobile: {
@@ -26,7 +22,7 @@ var userSchema = Schema({
     },
     gender:{
         type: String,
-        enum: ["M", "F"]
+        enum: ["Male", "Female"]
     },
     password: {
         type: String
@@ -35,15 +31,11 @@ var userSchema = Schema({
         type: String
     },
     userType:{
-        type: String,
-        enum: ["user","admin"],
-        default: "user"
-    }
-    // category: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "category",
-    //     required: true
-    // },
+        type: String
+    } 
+},
+{
+    timestamps: true
 });
 var userData = mongoose.model('User', userSchema);
 module.exports = {

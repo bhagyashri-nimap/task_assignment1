@@ -1,14 +1,78 @@
 
 
 var { userData } = require('../mongooseModel/User.js');
+var { policyCategoryData } = require('../mongooseModel/PolicyCategory.js');
+var { policyInfoData } = require('../mongooseModel/PolicyInfo.js');
+var { agentData } = require('../mongooseModel/Agent.js');
+var { policyCarrierData } = require('../mongooseModel/PolicyCarrier.js');
+const multer = require('multer');
 require('dotenv').config();
 var _ = require('lodash');
 var jwt = require("jsonwebtoken")
 var jwtDecode = require("jwt-decode")
 var sha256 = require("js-sha256").sha256
-var axios = require("axios")
 var jwtKey = process.env.JWT_KEY
 
+exports.userSave = async function (userdata) {
+    const  ifAlreadyUser=await userData.findOne({
+        email:userdata.email
+      })
+
+      if (ifAlreadyUser && ifAlreadyUser._id && ifAlreadyUser.email) {
+        return {
+            data: "Email Already Exist",
+        }
+    }
+  let userObj = new userData(userdata)
+  var saveUser = await userObj.save()
+  
+       if (saveUser && !saveUser._id) {
+           return {
+               data: "Something Went Wrong While Saving UserAccount"
+           }
+       }
+       return saveUser
+},
+exports.companySave = async function (companyData) {
+    const  ifAlreadyUser=await policyCarrierData.findOne({
+        companyName:companyData.companyName
+      })
+
+      if (ifAlreadyUser && ifAlreadyUser._id && ifAlreadyUser.companyName) {
+        return {
+            data: "companyName Already Exist",
+        }
+    }
+  let companyObj = new policyCarrierData(companyData)
+  var savecompany = await companyObj.save()
+  
+       if (savecompany && !savecompany._id) {
+           return {
+               data: "Something Went Wrong While Saving Company"
+           }
+       }
+       return savecompany
+},
+exports.categorySave = async function (categoryData) {
+    const  ifAlreadyUser=await policyCategoryData.findOne({
+        categoryName:categoryData.categoryName
+      })
+
+      if (ifAlreadyUser && ifAlreadyUser._id && ifAlreadyUser.categoryName) {
+        return {
+            data: "categoryName Already Exist",
+        }
+    }
+  let categoryObj = new policyCategoryData(categoryData)
+  var savecategory = await categoryObj.save()
+  
+       if (savecategory && !savecategory._id) {
+           return {
+               data: "Something Went Wrong While Saving Category"
+           }
+       }
+       return savecategory
+}
 exports.signUp = async function (data) {
     let saveUser
        const ifAlreadyUser = await userData.findOne({
@@ -37,7 +101,6 @@ exports.signUp = async function (data) {
        }
        let newUserObj = {
            firstName: data.firstName,
-           lastName:data.lastName,
            dob:data.dob,
            state:data.state,
            gender:data.gender,
