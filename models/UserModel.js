@@ -26,7 +26,6 @@ exports.cpuUsages =  function (data,res) {
                 });
             });
             process.exit();
-            // process.exit(0);
         }
     });
 },
