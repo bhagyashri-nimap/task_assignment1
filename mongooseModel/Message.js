@@ -4,12 +4,9 @@ var messageSchema = Schema({
     message: {
         type: String
     },
-    day: {
-        type: Date
-    },
-    time: {
-        type: Date
-    },
+    msgTimestamps:{
+        type: Date 
+    }
 });
 var messageData = mongoose.model('Message', messageSchema);
 module.exports = {

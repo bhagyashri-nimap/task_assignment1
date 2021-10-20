@@ -1,40 +1,20 @@
 
 var { messageData } = require('../mongooseModel/Message.js');
+var cron = require("node-cron");
 exports.save = async function (data) {
-    console.log(data,"data")
+    var date = new Date(data.day);
+    var unixTimeStamp = Math.floor(date.getTime() / 1000);
+    const date1= new Date(unixTimeStamp*1000);
+    var finaldate = date1.toLocaleDateString("en-US")
+    var msgTime= new Date(finaldate+" "+data.time)
     var savemessage
        let newObj2 = {
         message: data.message,
-        day: data.day,
-        time:data.time
+        msgTimestamps:new Date(finaldate+" "+data.time)
        }
-    const ifAlreadyday = await messageData.findOne({
-        day:data.day
-    })
-    if (ifAlreadyday && ifAlreadyday._id && ifAlreadyday.day) {
-        console.log(ifAlreadyday)
-        let newObj = {
-            message: data.message,   
-        }
-        const userOutput = await messageData.findByIdAndUpdate({
-            _id: ifAlreadyday._id
-        },
-        {$set: newObj}, {new: true}
-    )
-       var savemsg = await userOutput.save()
-       if (savemsg && !savemsg._id) {
-        return {
-            data: "Something Went Wrong While Saving Msg",
-            value: false
-        }
-    }
-    return {
-        data: "updated",
-        value: true
-    }    
-    }else{
         let msgObj = new messageData(newObj2)
         savemessage = await msgObj.save()
+
         if (savemessage && !savemessage._id) {
             return {
                 data: "Something Went Wrong While Saving Message",
@@ -45,6 +25,6 @@ exports.save = async function (data) {
             data: "saved",
             value: true
         }
-    }
+    
 
 }
