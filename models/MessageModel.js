@@ -47,18 +47,4 @@ exports.save = async function (data) {
         }
     }
 
-
-
-    //    let msgObj = new messageData(newObj2)
-    //    savemessage = await msgObj.save()
-    //    if (savemessage && !savemessage._id) {
-    //        return {
-    //            data: "Something Went Wrong While Saving Message",
-    //            value: false
-    //        }
-    //    }
-    //    return {
-    //        data: "saved",
-    //        value: true
-    //    }
 }
