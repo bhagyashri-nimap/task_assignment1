@@ -9,7 +9,6 @@ var { userAccountData } = require('../mongooseModel/UserAccount.js');
 var os = require('os-utils');
 require('dotenv').config();
 var _ = require('lodash');
-var async=require('async');
 var jwt = require("jsonwebtoken")
 var jwtDecode = require("jwt-decode")
 var sha256 = require("js-sha256").sha256

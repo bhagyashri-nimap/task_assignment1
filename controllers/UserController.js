@@ -5,6 +5,7 @@ const multer = require('multer');
 const XLSX = require('xlsx');
 // var {authenticateUser} = require("../config/middleware");
 router.use(express.json());
+//sign up
 router.post("/signup", async (req, res) => {
     try {
         var data = await UserModel.signUp(req.body)
@@ -31,6 +32,7 @@ router.post("/login", async (req, res) => {
         res.status(500).send(error)
     }
 })
+
 const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         const extArray = file.originalname.split('.');
@@ -40,6 +42,7 @@ const storage = multer.diskStorage({
     destination: 'public/uploads/',
 });
 const uploads = multer({ storage }).single('file');
+//fileUpload api store data in mongodb
 router.post("/fileUpload", async (req, res) => {
     console.log(req)
     uploads(req, res, async (err) => {
@@ -86,12 +89,15 @@ router.post("/fileUpload", async (req, res) => {
     })
     
 })
+//getpolicy for each user
 router.get("/getPolicyForeachUser/:id", (req, res) => {
     UserModel.getPolicyForeachUser(req.params,res)
 })
+//Track real-time CPU utilization api
 router.post("/cpuUsages", (req, res) => {
     UserModel.cpuUsages(req,res)
 })
+//search policy info using userName
 router.post("/searchApi", async(req, res) => {
     try {
         var data = await UserModel.getPolicyInfo(req.query)
