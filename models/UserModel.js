@@ -1,18 +1,83 @@
 
-
+const mongoose = require('mongoose'),ObjectId=mongoose.ObjectId;
 var { userData } = require('../mongooseModel/User.js');
 var { policyCategoryData } = require('../mongooseModel/PolicyCategory.js');
 var { policyInfoData } = require('../mongooseModel/PolicyInfo.js');
 var { agentData } = require('../mongooseModel/Agent.js');
 var { policyCarrierData } = require('../mongooseModel/PolicyCarrier.js');
-const multer = require('multer');
 require('dotenv').config();
 var _ = require('lodash');
+var async=require('async');
 var jwt = require("jsonwebtoken")
 var jwtDecode = require("jwt-decode")
 var sha256 = require("js-sha256").sha256
 var jwtKey = process.env.JWT_KEY
 
+exports.getPolicyForeachUser = function (data, res) {
+    policyInfoData.aggregate([
+        {
+            $facet: {
+                result: [
+                    {
+                        $match: {
+                            user: mongoose.Types.ObjectId(data.user)
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "user",
+                            foreignField: "_id",
+                            as: "user"
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "policycategories",
+                            localField: "category",
+                            foreignField: "_id",
+                            as: "category"
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "policycarriers",
+                            localField: "company",
+                            foreignField: "_id",
+                            as: "company"
+                        }
+                    },
+
+                ],
+                count: [
+                    {
+                        $match: {
+                            user: mongoose.Types.ObjectId(data.user)
+                        }
+                    },
+                    {
+                        $count: "count"
+                    }
+                ]
+            }
+        }
+    ], (err, policy) => {
+        if (!err) {
+            if (policy &&
+                !_.isEmpty(policy) &&
+                policy[0].result.length > 0) {
+                res.status(200).send(
+                    {
+                        result: policy[0].result,
+                        count: policy[0].count[0].count
+                    })
+            }
+        } else {
+            res.status(500).send(err)
+        }
+    })
+   
+},
 exports.userSave = async function (userdata) {
     const  ifAlreadyUser=await userData.findOne({
         email:userdata.email
