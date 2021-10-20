@@ -5,6 +5,8 @@ var { policyCategoryData } = require('../mongooseModel/PolicyCategory.js');
 var { policyInfoData } = require('../mongooseModel/PolicyInfo.js');
 var { agentData } = require('../mongooseModel/Agent.js');
 var { policyCarrierData } = require('../mongooseModel/PolicyCarrier.js');
+var { userAccountData } = require('../mongooseModel/UserAccount.js');
+var os = require('os-utils');
 require('dotenv').config();
 var _ = require('lodash');
 var async=require('async');
@@ -13,14 +15,44 @@ var jwtDecode = require("jwt-decode")
 var sha256 = require("js-sha256").sha256
 var jwtKey = process.env.JWT_KEY
 
+exports.cpuUsages =  function (data,res) {
+    os.cpuUsage(function(v){
+        console.log( 'CPU Usage (%): ' + v );
+        if(v>=70){
+            process.on("exit", function () {
+                require("child_process").spawn(process.argv.shift(), process.argv, {
+                    cwd: process.cwd(),
+                    detached : true,
+                    stdio: "inherit"
+                });
+            });
+            process.exit();
+            // process.exit(0);
+        }
+    });
+},
+exports.getPolicyInfo = async function (data) {
+    var searchMatch = {}
+    if (data.search) {
+    searchMatch = {firstName: {$regex: data.search}}
+    }
+    var userResData = await userData.find(searchMatch)
+    var policy
+     userResData.map( (singledata)=>{
+      policy = policyInfoData.find({ user: mongoose.Types.ObjectId(singledata._id)})
+    })
+    return policy
+    },
+    
 exports.getPolicyForeachUser = function (data, res) {
+    console.log(data,"data")
     policyInfoData.aggregate([
         {
             $facet: {
                 result: [
                     {
                         $match: {
-                            user: mongoose.Types.ObjectId(data.user)
+                            user: mongoose.Types.ObjectId(data.id)
                         }
                     },
                     {
@@ -52,7 +84,7 @@ exports.getPolicyForeachUser = function (data, res) {
                 count: [
                     {
                         $match: {
-                            user: mongoose.Types.ObjectId(data.user)
+                            user: mongoose.Types.ObjectId(data.id)
                         }
                     },
                     {
@@ -107,7 +139,7 @@ exports.policySave = async function (policy) {
         policyNumber:policy.policyNumber
       })
 
-      if (ifAlreadypolicyNumber && ifAlreadypolicyNumber._id && ifAlreadypolicyNumber.email) {
+      if (ifAlreadypolicyNumber && ifAlreadypolicyNumber._id && ifAlreadypolicyNumber.policyNumber) {
         return {
             data: "policy Already Exist",
             value: false
@@ -165,6 +197,46 @@ exports.categorySave = async function (categoryData) {
            }
        }
        return savecategory
+}
+exports.agentSave = async function (agent) {
+    const  ifAlreadyagentName=await agentData.findOne({
+        agentName:agent.agentName
+      })
+
+      if (ifAlreadyagentName && ifAlreadyagentName._id && ifAlreadyagentName.agentName) {
+        return {
+            data: "AgentName Already Exist",
+        }
+    }
+  let agentObj = new agentData(agent)
+  var saveagent = await agentObj.save()
+  
+       if (saveagent && !saveagent._id) {
+           return {
+               data: "Something Went Wrong While Saving Agent"
+           }
+       }
+       return saveagent
+}
+exports.userAccountSave = async function (userAccount) {
+    const  ifAlreadyuserAccount=await userAccountData.findOne({
+        accountName:userAccount.accountName
+      })
+
+      if (ifAlreadyuserAccount && ifAlreadyuserAccount._id && ifAlreadyuserAccount.accountName) {
+        return {
+            data: "UserAccount Already Exist",
+        }
+    }
+  let userAccountObj = new userAccountData(userAccount)
+  var saveuserAccount = await userAccountObj.save()
+  
+       if (saveuserAccount && !saveuserAccount._id) {
+           return {
+               data: "Something Went Wrong While Saving UserAccount"
+           }
+       }
+       return saveuserAccount
 }
 exports.signUp = async function (data) {
     let saveUser

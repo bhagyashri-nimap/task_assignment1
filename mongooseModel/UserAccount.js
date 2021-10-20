@@ -4,11 +4,6 @@ const mongoose = require('mongoose'),
 var userAccountSchema = Schema({
     accountName: {
         type: String
-    },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
     }
 },{
     timestamps: true

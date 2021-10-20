@@ -14,17 +14,17 @@ var policyInfoSchema = Schema({
     company:{
         type: Schema.Types.ObjectId,
         ref: "policyCarrier",
-        required: true
+       
     },
     category:{
         type: Schema.Types.ObjectId,
         ref: "PolicyCategory",
-        required: true
+       
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+        ref: "User"
+        
     },
 },{
     timestamps: true

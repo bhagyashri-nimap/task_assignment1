@@ -60,30 +60,48 @@ router.post("/fileUpload", async (req, res) => {
             userdata.zipCode=data.zip
             userdata.userType=data.userType
             userdata.gender=data.gender
-           var saveUser = await UserModel.userSave(userdata)
+             var saveUser = await UserModel.userSave(userdata)
              var companyData={}
              companyData.companyName=data.company_name
-            var saveCompany = await UserModel.companySave(companyData)
+             var saveCompany = await UserModel.companySave(companyData)
              var categoryData={}
              categoryData.categoryName=data.category_name
              var savecategory = await UserModel.categorySave(categoryData)
              var policy={}
-              policy.policyNumber=data.firstname
+              policy.policyNumber=data.policy_number
               policy.startDate=data.policy_start_date
               policy.EndDate=data.policy_start_date
               policy.company=saveCompany._id
               policy.category=savecategory._id
               policy.user=saveUser._id
-            var savepolicy = await UserModel.policySave(policy)
+              var savepolicy = await UserModel.policySave(policy)
+              var agent={}
+              agent.agentName=data.agent
+              var saveAgent = await UserModel.agentSave(agent)
+              var userAccount={}
+              userAccount.accountName=data.account_name
+              var saveuserAccount = await UserModel.userAccountSave(userAccount)
         })
         return res.status(200).json("Done")
     })
     
 })
-router.post("/getPolicyForeachUser", (req, res) => {
-    UserModel.getPolicyForeachUser(req.body,res)
+router.get("/getPolicyForeachUser/:id", (req, res) => {
+    UserModel.getPolicyForeachUser(req.params,res)
 })
-router.post("/searchApi", (req, res) => {
-    UserModel.getPolicyInfo(req.body,res)
+router.post("/cpuUsages", (req, res) => {
+    UserModel.cpuUsages(req,res)
+})
+router.post("/searchApi", async(req, res) => {
+    try {
+        var data = await UserModel.getPolicyInfo(req.query)
+        if (data) {
+            res.status(200).json(data)
+        } else {
+            res.status(500).json(data)
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
 })
 module.exports = router

@@ -4,7 +4,6 @@ exports.save = async function (data) {
     let saveAgent
        let newAgentObj = {
         agentName: data.agentName,
-        user: data.user
        }
 
        let agentObj = new agentData(newAgentObj)

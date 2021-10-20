@@ -7,11 +7,13 @@ var PolicyCarrierService = require('../controllers/PolicyCarrierController')
 var PolicyCategoryService = require('../controllers/PolicyCategoryController')
 var PolicyInfoService = require('../controllers/PolicyInfoController')
 var UserAccountService = require('../controllers/UserAccountController')
+var MessageService = require('../controllers/MessageController')
 router.all("/:apiName",(req, res,next) => {
     console.log("Called: ", req.path)
       next()
    
 })
+router.use(MessageService)
 router.use(UserService)
 router.use(AgentService)
 router.use(PolicyCarrierService)

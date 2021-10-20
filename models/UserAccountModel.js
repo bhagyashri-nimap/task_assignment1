@@ -3,8 +3,7 @@ var { userAccountData } = require('../mongooseModel/UserAccount.js');
 exports.save = async function (data) {
     let saveUserAccount
        let newObj = {
-        accountName: data.accountName,
-        user: data.user
+        accountName: data.accountName,  
        }
 
        let userAccountObj = new userAccountData(newObj)
