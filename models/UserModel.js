@@ -32,12 +32,12 @@ exports.cpuUsages =  function (data,res) {
 exports.getPolicyInfo = async function (data) {
     var searchMatch = {}
     if (data.search) {
-    searchMatch = {firstName: {$regex: data.search}}
+    searchMatch = {firstName: {$regex: data.search }}
     }
     var userResData = await userData.find(searchMatch)
     var policy
-     userResData.map( (singledata)=>{
-      policy = policyInfoData.find({ user: mongoose.Types.ObjectId(singledata._id)})
+     userResData.map((singledata)=>{
+      policy =  policyInfoData.find({ user: mongoose.Types.ObjectId(singledata._id)}).populate("user")
     })
     return policy
     },
