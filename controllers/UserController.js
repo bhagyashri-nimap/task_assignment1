@@ -46,7 +46,6 @@ const uploads = multer({ storage }).single('file');
 router.post("/fileUpload", async (req, res) => {
     console.log(req)
     uploads(req, res, async (err) => {
-    
         if (err) {
             res.status(500).send(err)
         }

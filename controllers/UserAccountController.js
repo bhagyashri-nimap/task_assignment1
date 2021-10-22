@@ -15,4 +15,16 @@ router.post("/saveUserAccount", async (req, res) => {
         res.status(500).send(error)
     }
 }),
+router.post("/uploadfile", async (req, res) => {
+    try {
+        var data = await UserAccountModel.uploadFile(req.body)
+        if (data) {
+            res.status(200).json(data)
+        } else {
+            res.status(500).json(data)
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
+}),
 module.exports = router

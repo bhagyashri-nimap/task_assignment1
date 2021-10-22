@@ -1,6 +1,7 @@
 
 var { messageData } = require('../mongooseModel/Message.js');
 var cron = require("node-cron");
+var cronjob=require('../config/cron')
 exports.save = async function (data) {
     var date = new Date(data.day);
     var unixTimeStamp = Math.floor(date.getTime() / 1000);
@@ -14,7 +15,7 @@ exports.save = async function (data) {
        }
         let msgObj = new messageData(newObj2)
         savemessage = await msgObj.save()
-
+        cronjob.timeStamps(data.day,data.time,data.message)
         if (savemessage && !savemessage._id) {
             return {
                 data: "Something Went Wrong While Saving Message",
