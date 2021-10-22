@@ -6,8 +6,7 @@ var dayArry=day.split('-')
 var timeArry=time.split(':')
 console.log(dayArry)
 console.log(timeArry)
-cron.schedule(`${timeArry[1]} ${timeArry[0]} ${dayArry[2]} ${dayArry[1]} *`, () => {
-console.log("111111111111111111")
+cron.schedule(`0 ${timeArry[1]} ${timeArry[0]} ${dayArry[2]} ${dayArry[1]} 0  ${dayArry[0]}`, () => {
 let saveMsg
        let newObj = {
         message: msg,
