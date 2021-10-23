@@ -31,7 +31,7 @@ exports.save = async function (data) {
                     message: data.message
                    }
                    let Obj = new collectionData(newObj)
-                   saveMsg = Obj.save()
+                   Obj.save()
                    clearInterval(interval);
             },seconds)
             return{
