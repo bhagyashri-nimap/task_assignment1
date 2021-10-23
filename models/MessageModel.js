@@ -13,26 +13,26 @@ exports.save = async function (data) {
             data:"invalid date",
             value:true} 
         }
-    var savemessage
+    var saveMessage
        let newObj2 = {
         message: data.message,
         msgTimestamps:new Date(formateDate)
        }
         let msgObj = new messageData(newObj2)
-         savemessage = await msgObj.save()
-        if (savemessage && !savemessage._id) {
+        saveMessage = await msgObj.save()
+        if (saveMessage && !saveMessage._id) {
             return {
                 data: "Something Went Wrong While Saving Message",
                 value: false
             }
         }else{
-            var intervel= setInterval(function timeStamps() {
+            var interval= setInterval(function timeStamps() {
                 let newObj = {
                     message: data.message
                    }
                    let Obj = new collectionData(newObj)
                    saveMsg = Obj.save()
-                   clearInterval(intervel);
+                   clearInterval(interval);
             },seconds)
             return{
                 data:"saved",
